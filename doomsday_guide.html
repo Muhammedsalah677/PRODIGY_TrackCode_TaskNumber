@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Avengers: Doomsday Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red:  #cc0010;
+      --gold: #e8b84b;
+      --dark: rgba(0,0,0,0.72);
+      --nav-h: 66px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      color: #fff;
+      background: #0a0a0a;
+      overflow-x: hidden;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 36px;
+      transition: background 0.4s, box-shadow 0.4s;
+      background: transparent;
+    }
+
+    nav.scrolled {
+      background: rgba(5, 5, 8, 0.95);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.6);
+      backdrop-filter: blur(10px);
+    }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 3px;
+      color: #fff;
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--red); }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 4px;
+    }
+
+    .nav-links a {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      text-decoration: none;
+      padding: 7px 14px;
+      border-radius: 3px;
+      position: relative;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 2px; left: 50%;
+      width: 0; height: 2px;
+      background: var(--red);
+      transform: translateX(-50%);
+      transition: width 0.25s;
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+      background: rgba(255,255,255,0.07);
+    }
+    .nav-links a:hover::after { width: 70%; }
+
+    .nav-links a.active { color: #fff; }
+    .nav-links a.active::after { width: 70%; }
+
+    /* Mobile */
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: #fff; transition: transform 0.3s, opacity 0.3s; }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    @media (max-width: 680px) {
+      .nav-links { display: none; flex-direction: column; position: absolute; top: var(--nav-h); left: 0; right: 0; background: rgba(5,5,8,0.97); padding: 12px 20px 20px; }
+      .nav-links.open { display: flex; }
+      .hamburger { display: flex; }
+    }
+
+    /* ── HERO ── */
+    #home {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: flex-start;
+      padding: 0 60px 80px;
+      position: relative;
+      background-image: url('http://www.impawards.com/2026/posters/avengers_doomsday.jpg');
+      background-size: cover;
+      background-position: center top;
+      background-repeat: no-repeat;
+    }
+
+    /* dark gradient overlay so text is readable */
+    #home::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(
+        to right,
+        rgba(0,0,0,0.80) 0%,
+        rgba(0,0,0,0.40) 60%,
+        rgba(0,0,0,0.10) 100%
+      );
+    }
+
+    .hero-content { position: relative; max-width: 520px; }
+
+    .hero-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 14px;
+    }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3.5rem, 9vw, 7rem);
+      line-height: 0.92;
+      letter-spacing: 3px;
+    }
+
+    .hero-sub {
+      color: rgba(255,255,255,0.75);
+      font-size: 1rem;
+      line-height: 1.65;
+      margin-top: 16px;
+      max-width: 420px;
+    }
+
+    .hero-btn {
+      display: inline-block;
+      margin-top: 28px;
+      background: var(--red);
+      color: #fff;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 12px 28px;
+      border-radius: 3px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .hero-btn:hover { background: #e8001a; transform: translateY(-2px); }
+
+    @media (max-width: 560px) { #home { padding: 0 28px 60px; } }
+
+    /* ── SHARED SECTION STYLES ── */
+    section { padding: 80px 0; }
+    .inner { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+
+    .sec-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 8px;
+    }
+    .sec-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+    .sec-desc {
+      color: rgba(255,255,255,0.55);
+      font-size: 1rem;
+      line-height: 1.7;
+      max-width: 560px;
+      margin-bottom: 48px;
+    }
+
+    /* ── ABOUT ── */
+    #about { background: #111116; }
+
+    .about-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+    .about-cols p {
+      color: rgba(255,255,255,0.6);
+      line-height: 1.75;
+      margin-bottom: 12px;
+    }
+    .about-cols p strong { color: #fff; }
+    .about-cols p em { color: var(--gold); font-style: normal; }
+
+    .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .stat {
+      background: #1a1a22;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 6px;
+      padding: 20px;
+      text-align: center;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+    .stat:hover { border-color: rgba(204,0,16,0.45); transform: translateY(-3px); }
+    .stat .n { font-family: 'Bebas Neue', sans-serif; font-size: 2.4rem; color: var(--red); line-height: 1; }
+    .stat .l { font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-top: 4px; }
+
+    @media (max-width: 680px) { .about-cols { grid-template-columns: 1fr; } }
+
+    /* ── MOVIES ── */
+    #movies { background: #0d0d12; }
+
+    .movies-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .movie-card {
+      background: #1a1a22;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.25s, border-color 0.25s;
+    }
+    .movie-card:hover { transform: translateY(-6px); border-color: rgba(204,0,16,0.4); }
+
+    .movie-thumb {
+      width: 100%;
+      aspect-ratio: 2/3;
+      display: flex;
+      align-items: flex-end;
+      padding: 14px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.15rem;
+      letter-spacing: 1px;
+      line-height: 1.2;
+      color: #fff;
+      text-shadow: 0 2px 6px #000;
+    }
+
+    .movie-info { padding: 14px; }
+    .movie-info h3 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    .movie-info .yr { font-size: 0.78rem; color: rgba(255,255,255,0.4); }
+    .movie-info .tag {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 0.68rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: rgba(204,0,16,0.15);
+      color: #f06070;
+      padding: 3px 7px;
+      border-radius: 3px;
+      font-family: 'Barlow Condensed', sans-serif;
+    }
+
+    /* ── TIMELINE ── */
+    #timeline { background: #111116; }
+
+    .tl { position: relative; padding-left: 32px; display: flex; flex-direction: column; gap: 36px; }
+    .tl::before { content: ''; position: absolute; left: 6px; top: 8px; bottom: 8px; width: 1px; background: linear-gradient(to bottom, var(--red), transparent); }
+
+    .tl-item { position: relative; }
+    .tl-item::before {
+      content: '';
+      position: absolute; left: -29px; top: 5px;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: var(--red); border: 2px solid #111116;
+    }
+    .tl-item .yr { font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: var(--red); margin-bottom: 4px; }
+    .tl-item h4 { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1rem; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .tl-item p { color: rgba(255,255,255,0.5); font-size: 0.93rem; line-height: 1.65; }
+
+    /* ── TICKETS ── */
+    #tickets {
+      background: #0d0d12;
+      text-align: center;
+    }
+    .cta-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.2rem, 5vw, 4rem); letter-spacing: 3px; margin-bottom: 14px; }
+    .cta-desc { color: rgba(255,255,255,0.5); font-size: 1rem; max-width: 440px; margin: 0 auto 32px; line-height: 1.65; }
+    .cta-btn {
+      display: inline-block;
+      background: var(--red);
+      color: #fff;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 14px 36px;
+      border-radius: 3px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .cta-btn:hover { background: #e8001a; transform: translateY(-2px); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #080808;
+      text-align: center;
+      padding: 36px 24px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    footer .fl { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 3px; margin-bottom: 8px; }
+    footer .fl span { color: var(--red); }
+    footer p { color: rgba(255,255,255,0.35); font-size: 0.82rem; }
+    footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
+    footer a:hover { color: #fff; }
+
+    /* ── DIVIDER ── */
+    .div { border: none; border-top: 1px solid rgba(255,255,255,0.05); }
+
+    /* ── SCROLL REVEAL ── */
+    .rev { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .rev.in { opacity: 1; transform: none; }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a class="nav-logo" href="#home">AVENGERS <span>&</span> DOOMSDAY</a>
+  <button class="hamburger" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#home"     class="nl active">Home</a></li>
+    <li><a href="#about"    class="nl">About</a></li>
+    <li><a href="#movies"   class="nl">Watch List</a></li>
+    <li><a href="#timeline" class="nl">Timeline</a></li>
+    <li><a href="#tickets"  class="nl">Tickets</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="home">
+  <div class="hero-content">
+    <p class="hero-eyebrow">Marvel Cinematic Universe · 2026</p>
+    <h1 class="hero-title">Avengers<br>Doomsday</h1>
+    <p class="hero-sub">
+      Doctor Doom steps out of the shadows. Every hero across the multiverse must answer — or face oblivion.
+    </p>
+    <a href="#movies" class="hero-btn">See What to Watch First</a>
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="inner">
+    <p class="sec-label rev">The Event</p>
+    <h2 class="sec-title rev">What Is Doomsday?</h2>
+    <p class="sec-desc rev">The next seismic MCU crossover. Victor Von Doom has been watching the multiverse fracture — and now he strikes.</p>
+    <div class="about-cols">
+      <div class="rev">
+        <p>After <strong>Avengers: Endgame</strong>, the Avengers thought the worst was behind them. But the Time Heist left cracks across every timeline — and <em>Victor Von Doom</em> has been exploiting every single one.</p>
+        <p>Armed with unmatched technology and sorcery, Doom launches a plan decades in the making. Heroes from different realities, different eras, and different teams are forced to unite for the first time.</p>
+        <p>Featuring <strong>Robert Downey Jr.</strong> returning to Marvel — not as Tony Stark, but as the terrifying Doctor Doom. <em>This is unlike anything the MCU has done before.</em></p>
+      </div>
+      <div class="stats rev">
+        <div class="stat"><div class="n">28+</div><div class="l">Characters in Poster</div></div>
+        <div class="stat"><div class="n">∞</div><div class="l">Universes at Risk</div></div>
+        <div class="stat"><div class="n">Dec</div><div class="l">2026 Release</div></div>
+        <div class="stat"><div class="n">RDJ</div><div class="l">As Doctor Doom</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- MOVIES -->
+<section id="movies">
+  <div class="inner">
+    <p class="sec-label rev">Essential Viewing</p>
+    <h2 class="sec-title rev">Watch Before Doomsday</h2>
+    <p class="sec-desc rev">These films lay the groundwork. Every story thread, every character, every sacrifice — they all converge here.</p>
+    <div class="movies-grid">
+
+      <div class="movie-card rev">
+        <img src="C:\Python27\doomsday\thor.jfif" class="movie-thumb" alt="Thor: Love and Thunder" style="object-fit:cover;">
+        <div class="movie-info">
+          <h3>Thor: Love &amp; Thunder</h3>
+          <div class="yr">2022 · Phase 4</div>
+          <div class="tag">New Asgard</div>
+        </div>
+      </div>
+
+      <div class="movie-card rev">
+        <img src="C:\Python27\doomsday\bp2.jfif" class="movie-thumb" alt="Black Panther: Wakanda Forever" style="object-fit:cover;">
+        <div class="movie-info">
+          <h3>Black Panther: Wakanda Forever</h3>
+          <div class="yr">2022 · Phase 4</div>
+          <div class="tag">Vibranium Wars</div>
+        </div>
+      </div>
+
+      <div class="movie-card rev">
+        <img src="C:\Python27\doomsday\infinitywar.jfif" class="movie-thumb" alt="Avengers: Infinity War" style="object-fit:cover;">
+        <div class="movie-info">
+          <h3>Avengers: Infinity War</h3>
+          <div class="yr">2018 · Phase 3</div>
+          <div class="tag">⚠ Essential</div>
+        </div>
+      </div>
+
+      <div class="movie-card rev">
+        <img src="C:\Python27\doomsday\endgame.jfif" class="movie-thumb" alt="Avengers: Endgame" style="object-fit:cover;">
+        <div class="movie-info">
+          <h3>Avengers: Endgame</h3>
+          <div class="yr">2019 · Phase 3</div>
+          <div class="tag">⚠ Essential</div>
+        </div>
+      </div>
+
+      <div class="movie-card rev">
+        <img src="C:\Python27\doomsday\x men.jfif" class="movie-thumb" alt="X-Men Series" style="object-fit:cover;">
+        <div class="movie-info">
+          <h3>X-Men Series</h3>
+          <div class="yr">2000–2020 · Fox/Marvel</div>
+          <div class="tag">Mutants</div>
+        </div>
+      </div>
+
+      <div class="movie-card rev">
+        <img src="C:\Python27\doomsday\xmen 2.jfif" class="movie-thumb" alt="X-Men: Days of Future Past" style="object-fit:cover;">
+        <div class="movie-info">
+          <h3>X-Men: Days of Future Past</h3>
+          <div class="yr">2014 · Fox</div>
+          <div class="tag">Multiverse Hint</div>
+        </div>
+      </div>
+
+      <div class="movie-card rev">
+        <img src="C:\Python27\doomsday\multiverse.jfif" class="movie-thumb" alt="Multiverse of Madness" style="object-fit:cover;">
+        <div class="movie-info">
+          <h3>Doctor Strange: MoM</h3>
+          <div class="yr">2022 · Phase 4</div>
+          <div class="tag">Multiverse</div>
+        </div>
+      </div>
+
+      <div class="movie-card rev">
+        <img src="C:\Python27\doomsday\loki.jfif" class="movie-thumb" alt="Loki (Disney+ Series)" style="object-fit:cover;">
+        <div class="movie-info">
+          <h3>Loki (Disney+ Series)</h3>
+          <div class="yr">2021–2023 · Phase 4/5</div>
+          <div class="tag">TVA · Timeline</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- TIMELINE -->
+<section id="timeline">
+  <div class="inner">
+    <p class="sec-label rev">The Road Here</p>
+    <h2 class="sec-title rev">MCU Timeline</h2>
+    <p class="sec-desc rev">Key moments that set the stage for Doomsday.</p>
+    <div class="tl">
+      <div class="tl-item rev">
+        <div class="yr">2018</div>
+        <h4>The Snap — Infinity War</h4>
+        <p>Thanos collects all six Infinity Stones and erases half of all life. The Avengers are shattered for the first time.</p>
+      </div>
+      <div class="tl-item rev">
+        <div class="yr">2019</div>
+        <h4>The Blip Reversed — Endgame</h4>
+        <p>Tony Stark sacrifices himself to restore the universe. The temporal strain begins cracking the multiverse open.</p>
+      </div>
+      <div class="tl-item rev">
+        <div class="yr">2021</div>
+        <h4>Sacred Timeline Broken — Loki</h4>
+        <p>He Who Remains is killed. Infinite branching timelines are born — and Doom starts choosing his moment.</p>
+      </div>
+      <div class="tl-item rev">
+        <div class="yr">2022</div>
+        <h4>Multiverse Breached — MoM</h4>
+        <p>Doctor Strange and Scarlet Witch tear holes across realities. The multiverse is now open and exploitable.</p>
+      </div>
+      <div class="tl-item rev">
+        <div class="yr">2026</div>
+        <h4>Doom Declares War — Doomsday</h4>
+        <p>Victor Von Doom steps out of the shadows. Every hero who ever lived must answer — or fall together.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKETS -->
+<section id="tickets">
+  <div class="inner">
+    <p class="sec-label rev">Don't Miss It</p>
+    <h2 class="cta-title rev">Get Your Tickets</h2>
+    <p class="cta-desc rev">December 18, 2026. The MCU's biggest chapter yet. Secure your seat now.</p>
+    <a href="https://in.bookmyshow.com" target="_blank" class="cta-btn rev">Book on BookMyShow</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="fl">AVENGERS <span>&</span> DOOMSDAY</div>
+  <p>Made by <strong style="color:rgba(255,255,255,0.6)">Muhammadsalah</strong> · Marvel Fan Guide</p>
+  <p style="margin-top:6px;">Not affiliated with Marvel Studios · <a href="https://www.marvel.com/movies/avengers-doomsday" target="_blank">Official Marvel Site</a></p>
+</footer>
+
+<script>
+  // Scroll: darken navbar
+  const nav = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Hamburger
+  const ham = document.getElementById('ham');
+  const nl  = document.getElementById('navLinks');
+  ham.addEventListener('click', () => {
+    ham.classList.toggle('open');
+    nl.classList.toggle('open');
+  });
+  document.querySelectorAll('.nl').forEach(a => {
+    a.addEventListener('click', () => { ham.classList.remove('open'); nl.classList.remove('open'); });
+  });
+
+  // Active nav link on scroll
+  const secs = document.querySelectorAll('section[id]');
+  const links = document.querySelectorAll('.nl');
+  new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(a => a.classList.remove('active'));
+        const a = document.querySelector(`.nl[href="#${e.target.id}"]`);
+        if (a) a.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' }).observe && secs.forEach(s => {
+    new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          links.forEach(a => a.classList.remove('active'));
+          const a = document.querySelector(`.nl[href="#${e.target.id}"]`);
+          if (a) a.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' }).observe(s);
+  });
+
+  // Scroll reveal
+  new IntersectionObserver((entries, obs) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('in'), i * 55);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { rootMargin: '0px 0px -60px 0px' }).observe && document.querySelectorAll('.rev').forEach(el => {
+    new IntersectionObserver((entries, obs) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+      });
+    }, { rootMargin: '0px 0px -60px 0px' }).observe(el);
+  });
+</script>
+</body>
+</html>
