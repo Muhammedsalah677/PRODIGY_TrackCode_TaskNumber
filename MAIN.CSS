@@ -1,0 +1,66 @@
+html{
+    font-size: 22PX;
+}
+body{
+    background-color: rgba(239, 241, 238, 0.724);
+    color: rgb(17, 17, 17);
+
+}
+img{
+    color: blue;
+    width: 60px;
+    border-radius: 50px;
+    float: left;
+    margin-right: 10px;
+    color: black;
+    height: auto;
+}
+p
+{
+    color: red;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+p:after
+{
+color: yellow;
+}
+a{
+    color: red;
+}
+/* General styles for background image */
+.background-image {
+background-image: url('C:\Python27\doomsday\avengers-doomsday-3840x2160-17768.jpg');
+background-size: cover; /* Ensure the image covers the element */
+background-position: center; /* Center the image within the element */
+background-repeat: no-repeat; /* Prevent the image from repeating */
+width: 100%; /* Full width of the parent container */
+height: 700px; /* Set a specific height for the element */
+}
+.top-section {
+background-color: #0d0d0de8; /* Change this to your desired color */
+color: #f30f0f; /* Text color */
+padding: 20px;
+}
+.container{
+    margin:100px auto 0;
+    width: 70%;
+    height: 450px;
+    display: flex ;
+    justify-content: end;
+    gap: 03px;
+}
+.container img{
+    width: 150px;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid red(255,255,255,0.684);
+    transition: all ease-in-out 0.5s;
+}
+.container img:hover{
+    width: 90%;
+}
+
+
+
+
