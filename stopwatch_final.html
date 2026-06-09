@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stopwatch & Reminder</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f5f5f0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 2rem 1rem;
+      color: #1a1a1a;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 480px;
+    }
+
+    /* ── Tab bar ── */
+    .tab-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 1rem;
+    }
+    .tab-btn {
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #d0d0c8;
+      background: #ffffff;
+      color: #888;
+      font-size: 14px;
+      cursor: pointer;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+    .tab-btn.active {
+      background: #efefea;
+      color: #1a1a1a;
+      border-color: #aaa;
+      font-weight: 500;
+    }
+    .tab-btn:hover:not(.active) { background: #f0f0ea; }
+
+    /* ── Panel show/hide ── */
+    .panel { display: none; }
+    .panel.visible { display: block; }
+
+    /* ── Card ── */
+    .card {
+      background: #ffffff;
+      border: 1px solid #e0e0d8;
+      border-radius: 14px;
+      padding: 1.4rem;
+      margin-bottom: 1rem;
+    }
+
+    /* ── Clock ── */
+    .clock { text-align: center; padding: 0.75rem 0 0.5rem; }
+    .clock-face {
+      font-size: 62px;
+      font-weight: 500;
+      font-family: 'Courier New', monospace;
+      color: #1a1a1a;
+      letter-spacing: 1px;
+      line-height: 1;
+    }
+    .clock-ms { font-size: 38px; color: #999; }
+    .clock-label { font-size: 11px; color: #bbb; letter-spacing: 0.5px; margin-top: 8px; }
+
+    /* ── Buttons ── */
+    .action-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 1.25rem;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 9px 20px;
+      border-radius: 10px;
+      border: 1px solid #d0d0c8;
+      background: #ffffff;
+      color: #1a1a1a;
+      font-size: 14px;
+      cursor: pointer;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.12s;
+    }
+    .btn:hover { background: #f2f2ec; }
+    .btn:active { transform: scale(0.97); }
+    .btn:disabled { opacity: 0.3; cursor: default; transform: none; }
+    .btn-green  { border-color: #1D9E75; color: #085041; }
+    .btn-red    { border-color: #D85A30; color: #712B13; }
+    .btn-blue   { border-color: #378ADD; color: #0C447C; }
+    .btn-amber  { border-color: #BA7517; color: #633806; }
+
+    /* ── Lap table ── */
+    .lap-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #bbb;
+      letter-spacing: 0.5px;
+      padding: 0 4px 8px;
+      text-transform: uppercase;
+    }
+    .lap-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 4px;
+      border-bottom: 1px solid #f0f0ea;
+      font-size: 13px;
+      font-family: 'Courier New', monospace;
+    }
+    .lap-n { color: #aaa; min-width: 52px; font-family: inherit; font-size: 12px; }
+    .best  { color: #0F6E56; font-weight: 500; }
+    .worst { color: #993C1D; font-weight: 500; }
+    .empty-state { text-align: center; color: #bbb; font-size: 13px; padding: 1.5rem 0; }
+
+    /* ── Reminder status card ── */
+    .status-card {
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.3s;
+    }
+    .status-off    { background: #f2f2ec; }
+    .status-active { background: #EAF3DE; }
+    .status-delay  { background: #FAEEDA; }
+
+    .status-label { font-size: 13px; font-weight: 500; }
+    .status-off    .status-label { color: #888; }
+    .status-active .status-label { color: #27500A; }
+    .status-delay  .status-label { color: #633806; }
+
+    .status-sub { font-size: 11px; margin-top: 3px; }
+    .status-off    .status-sub { color: #aaa; }
+    .status-active .status-sub { color: #3B6D11; }
+    .status-delay  .status-sub { color: #854F0B; }
+
+    .status-time {
+      font-size: 26px;
+      font-weight: 500;
+      font-family: 'Courier New', monospace;
+    }
+    .status-off    .status-time { color: #ccc; }
+    .status-active .status-time { color: #0F6E56; }
+    .status-delay  .status-time { color: #BA7517; }
+
+    /* ── Cycle chips ── */
+    .cycle-info {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 1rem;
+    }
+    .cycle-chip {
+      background: #f5f5f0;
+      border-radius: 8px;
+      padding: 10px 14px;
+    }
+    .cycle-chip-label { font-size: 11px; color: #aaa; }
+    .cycle-chip-val { font-size: 16px; font-weight: 500; color: #1a1a1a; font-family: 'Courier New', monospace; margin-top: 3px; }
+
+    /* ── Reminder inputs ── */
+    .rem-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 1rem;
+    }
+    .field-block { display: flex; flex-direction: column; gap: 5px; }
+    .field-label { font-size: 12px; color: #888; display: flex; align-items: center; gap: 4px; }
+    .field-block input {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid #d8d8d0;
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: 'Courier New', monospace;
+      background: #fafaf8;
+      color: #1a1a1a;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .field-block input:focus { border-color: #888; background: #fff; }
+  </style>
+</head>
+<body>
+
+<div class="app">
+
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tab-sw" onclick="switchTab('sw')">
+      <i class="ti ti-clock" style="font-size:16px"></i> Stopwatch
+    </button>
+    <button class="tab-btn" id="tab-rem" onclick="switchTab('rem')">
+      <i class="ti ti-bell" style="font-size:16px"></i> Reminder
+    </button>
+  </div>
+
+  <!-- ══ STOPWATCH PANEL ══ -->
+  <div class="panel visible" id="panel-sw">
+
+    <div class="card">
+      <div class="clock">
+        <div class="clock-face" id="sw-display">00:<span id="sw-sec">00</span>.<span class="clock-ms" id="sw-ms">00</span></div>
+        <div class="clock-label">minutes &nbsp;·&nbsp; seconds &nbsp;·&nbsp; hundredths</div>
+      </div>
+      <div class="action-row">
+        <button class="btn btn-green" id="btn-start" onclick="swStartStop()">
+          <i class="ti ti-player-play"></i> Start
+        </button>
+        <button class="btn btn-red" id="btn-pause" style="display:none" onclick="swStartStop()">
+          <i class="ti ti-player-pause"></i> Pause
+        </button>
+        <button class="btn btn-blue" id="btn-lap" onclick="recordLap()" disabled>
+          <i class="ti ti-flag"></i> Lap
+        </button>
+        <button class="btn" onclick="resetSW()">
+          <i class="ti ti-refresh"></i> Reset
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="lap-header"><span>Lap</span><span>Split</span><span>Total</span></div>
+      <div id="laps"><div class="empty-state">Lap times will appear here</div></div>
+    </div>
+
+  </div>
+
+  <!-- ══ REMINDER PANEL ══ -->
+  <div class="panel" id="panel-rem">
+
+    <div class="card">
+
+      <div class="status-card status-off" id="rem-status-card">
+        <div>
+          <div class="status-label" id="rem-status-label">Reminder off</div>
+          <div class="status-sub" id="rem-status-sub">Set times below and press Start</div>
+        </div>
+        <div class="status-time" id="rem-status-time">--:--</div>
+      </div>
+
+      <div class="cycle-info">
+        <div class="cycle-chip">
+          <div class="cycle-chip-label">Active time</div>
+          <div class="cycle-chip-val" id="chip-active">— min</div>
+        </div>
+        <div class="cycle-chip">
+          <div class="cycle-chip-label">Delay time</div>
+          <div class="cycle-chip-val" id="chip-delay">— sec</div>
+        </div>
+      </div>
+
+      <div class="rem-grid">
+        <div class="field-block">
+          <span class="field-label">
+            <i class="ti ti-hourglass" style="font-size:13px"></i> Active (minutes)
+          </span>
+          <input type="number" id="r-active" placeholder="e.g. 25" min="1">
+        </div>
+        <div class="field-block">
+          <span class="field-label">
+            <i class="ti ti-clock-pause" style="font-size:13px"></i> Delay (seconds)
+          </span>
+          <input type="number" id="r-delay" placeholder="e.g. 10" min="1">
+        </div>
+      </div>
+
+      <div class="action-row" style="justify-content:flex-start; margin-top:0;">
+        <button class="btn btn-amber" id="btn-rem-start" onclick="startReminder()">
+          <i class="ti ti-bell"></i> Start reminder
+        </button>
+        <button class="btn btn-red" id="btn-rem-stop" onclick="stopReminder()" disabled>
+          <i class="ti ti-bell-off"></i> Stop
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+  /* ── Tab switching ── */
+  function switchTab(t) {
+    document.getElementById('panel-sw').classList.toggle('visible', t === 'sw');
+    document.getElementById('panel-rem').classList.toggle('visible', t === 'rem');
+    document.getElementById('tab-sw').classList.toggle('active', t === 'sw');
+    document.getElementById('tab-rem').classList.toggle('active', t === 'rem');
+  }
+
+  /* ══ STOPWATCH ══ */
+  let swRunning = false, swStart = 0, swElapsed = 0, lapElapsed = 0;
+  let swInterval = null, laps = [];
+
+  function fmt(ms) {
+    let m = Math.floor(ms / 60000);
+    let s = Math.floor((ms % 60000) / 1000);
+    let c = Math.floor((ms % 1000) / 10);
+    return (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s) + '.' + (c < 10 ? '0' + c : c);
+  }
+
+  function swTick() {
+    swElapsed = Date.now() - swStart;
+    let e = swElapsed;
+    let m = Math.floor(e / 60000);
+    let s = Math.floor((e % 60000) / 1000);
+    let c = Math.floor((e % 1000) / 10);
+    document.getElementById('sw-display').innerHTML =
+      (m < 10 ? '0' + m : m) + ':<span id="sw-sec">' + (s < 10 ? '0' + s : s) +
+      '</span>.<span class="clock-ms" id="sw-ms">' + (c < 10 ? '0' + c : c) + '</span>';
+  }
+
+  function swStartStop() {
+    if (!swRunning) {
+      swStart = Date.now() - swElapsed;
+      swInterval = setInterval(swTick, 30);
+      swRunning = true;
+      document.getElementById('btn-start').style.display = 'none';
+      document.getElementById('btn-pause').style.display = '';
+      document.getElementById('btn-lap').disabled = false;
+    } else {
+      clearInterval(swInterval);
+      swRunning = false;
+      document.getElementById('btn-start').style.display = '';
+      document.getElementById('btn-pause').style.display = 'none';
+    }
+  }
+
+  function recordLap() {
+    if (!swRunning) return;
+    let split = swElapsed - lapElapsed;
+    laps.unshift({ n: laps.length + 1, split: split, total: swElapsed });
+    lapElapsed = swElapsed;
+    renderLaps();
+  }
+
+  function renderLaps() {
+    if (!laps.length) {
+      document.getElementById('laps').innerHTML = '<div class="empty-state">Lap times will appear here</div>';
+      return;
+    }
+    let splits = laps.map(l => l.split);
+    let best = Math.min(...splits), worst = Math.max(...splits);
+    document.getElementById('laps').innerHTML = laps.map(function(l) {
+      let cls = splits.length > 1 ? (l.split === best ? 'best' : l.split === worst ? 'worst' : '') : '';
+      return '<div class="lap-row">' +
+        '<span class="lap-n">Lap ' + l.n + '</span>' +
+        '<span class="' + cls + '">' + fmt(l.split) + '</span>' +
+        '<span>' + fmt(l.total) + '</span>' +
+        '</div>';
+    }).join('');
+  }
+
+  function resetSW() {
+    clearInterval(swInterval);
+    swRunning = false; swElapsed = 0; lapElapsed = 0; laps = [];
+    document.getElementById('btn-start').style.display = '';
+    document.getElementById('btn-pause').style.display = 'none';
+    document.getElementById('btn-lap').disabled = true;
+    document.getElementById('sw-display').innerHTML =
+      '00:<span id="sw-sec">00</span>.<span class="clock-ms" id="sw-ms">00</span>';
+    renderLaps();
+  }
+
+  /* ══ REMINDER ══ */
+  let remInterval = null, remActive = 0, remDelay = 0, remLeft = 0, remPhase = 'off';
+
+  function buzz() {
+    if (navigator.vibrate) navigator.vibrate([500, 200, 500]);
+    try {
+      let ctx = new (window.AudioContext || window.webkitAudioContext)();
+      let o = ctx.createOscillator();
+      o.type = 'square';
+      o.frequency.value = 520;
+      o.connect(ctx.destination);
+      o.start();
+      setTimeout(function() { o.stop(); ctx.close(); }, 400);
+    } catch(e) {}
+  }
+
+  function fmtRemTime(s) {
+    let m = Math.floor(s / 60), r = s % 60;
+    return (m < 10 ? '0' + m : m) + ':' + (r < 10 ? '0' + r : r);
+  }
+
+  function setStatus(phase, left) {
+    let card  = document.getElementById('rem-status-card');
+    let label = document.getElementById('rem-status-label');
+    let sub   = document.getElementById('rem-status-sub');
+    let time  = document.getElementById('rem-status-time');
+    card.className = 'status-card status-' + phase;
+    if (phase === 'off') {
+      label.textContent = 'Reminder off';
+      sub.textContent   = 'Set times below and press Start';
+      time.textContent  = '--:--';
+    } else if (phase === 'active') {
+      label.textContent = 'Active — counting down';
+      sub.textContent   = 'Reminder will fire when it reaches zero';
+      time.textContent  = fmtRemTime(left);
+    } else {
+      label.textContent = 'Delay — cooling down';
+      sub.textContent   = 'Next cycle starts when delay ends';
+      time.textContent  = fmtRemTime(left);
+    }
+  }
+
+  function startReminder() {
+    let a = parseInt(document.getElementById('r-active').value);
+    let d = parseInt(document.getElementById('r-delay').value);
+    if (isNaN(a) || a <= 0 || isNaN(d) || d <= 0) {
+      alert('Please enter valid active time (minutes) and delay (seconds).');
+      return;
+    }
+    remActive = a * 60;
+    remDelay  = d;
+    document.getElementById('chip-active').textContent = a + ' min';
+    document.getElementById('chip-delay').textContent  = d + ' sec';
+    clearInterval(remInterval);
+    document.getElementById('btn-rem-stop').disabled  = false;
+    document.getElementById('btn-rem-start').disabled = true;
+    runActive();
+  }
+
+  function runActive() {
+    remLeft = remActive;
+    setStatus('active', remLeft);
+    remInterval = setInterval(function() {
+      remLeft--;
+      setStatus('active', remLeft);
+      if (remLeft <= 0) { clearInterval(remInterval); buzz(); runDelay(); }
+    }, 1000);
+  }
+
+  function runDelay() {
+    remLeft = remDelay;
+    setStatus('delay', remLeft);
+    remInterval = setInterval(function() {
+      remLeft--;
+      setStatus('delay', remLeft);
+      if (remLeft <= 0) { clearInterval(remInterval); runActive(); }
+    }, 1000);
+  }
+
+  function stopReminder() {
+    clearInterval(remInterval);
+    setStatus('off', 0);
+    document.getElementById('btn-rem-stop').disabled  = true;
+    document.getElementById('btn-rem-start').disabled = false;
+  }
+</script>
+
+</body>
+</html>
