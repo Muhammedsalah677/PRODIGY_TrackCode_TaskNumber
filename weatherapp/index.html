@@ -351,22 +351,20 @@ body {
 
 /* ── RESPONSIVE: MOBILE ── */
 @media (max-width: 768px) {
-  #app { flex-direction: column; }
+ #app { flex-direction: column-reverse; }
 
-  .sidebar {
-    width: 100%;
-    min-height: auto;
-    border-right: none;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    padding: 1.2rem 1rem;
-    gap: 1rem;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: flex-start;
-  }
-  .sidebar-logo { width:100%; padding-bottom:0.7rem; }
-  .sb-input-wrap { flex:1; min-width:160px; }
-  .sb-detail-grid { display:none; }
+.sidebar {
+  width: 100%;
+  min-height: auto;
+  border-right: none;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding: 1.2rem 1rem;
+  gap: 1rem;
+  flex-direction: column;
+}
+.sidebar-logo { display:none; }
+.sb-tip { display:none; }
+.sb-detail-grid { display:flex; }
 
   .main-content { padding: 1.2rem 1rem; }
   .th-temp { font-size: clamp(4rem, 20vw, 6rem); letter-spacing:-2px; }
