@@ -348,7 +348,11 @@ body {
 }
 
 .footer { font-size:11px; opacity:0.3; text-align:center; padding:1rem 0 0.5rem; }
-
+ .mobile-details { display:none; margin-top:14px; }
+.mobile-detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.md-tile { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:0.9rem 1rem; }
+.md-label { font-size:11px; opacity:0.55; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; }
+.md-value { font-size:1.3rem; font-weight:300; }
 @media (max-width: 768px) {
   #app { flex-direction: column; }
 
@@ -377,11 +381,6 @@ body {
   .sidebar { flex-direction: column; }
   .sb-input-wrap { width:100%; }
 }
-  .mobile-details { display:none; margin-top:14px; }
-.mobile-detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-.md-tile { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:0.9rem 1rem; }
-.md-label { font-size:11px; opacity:0.55; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; }
-.md-value { font-size:1.3rem; font-weight:300; }
 </style>
 </head>
 <body>
