@@ -131,11 +131,14 @@ section{padding:120px 48px;position:relative}
 /* ── PROJECTS ── */
 #projects .projects-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-top:64px}
 .project-card{background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:32px;transition:all .4s;position:relative;overflow:hidden;cursor:default}
-.project-card::after{content:'';position:absolute;inset:0;border-radius:16px;opacity:0;transition:opacity .4s;background:radial-gradient(600px at var(--mx,50%) var(--my,50%),rgba(0,217,255,0.04),transparent 60%)}
+
+/* FIX: ::after overlay must never intercept pointer events */
+.project-card::after{content:'';position:absolute;inset:0;border-radius:16px;opacity:0;transition:opacity .4s;background:radial-gradient(600px at var(--mx,50%) var(--my,50%),rgba(0,217,255,0.04),transparent 60%);pointer-events:none}
+
 .project-card:hover::after{opacity:1}
 .project-card:hover{border-color:rgba(0,217,255,0.2);transform:translateY(-6px) rotateX(2deg);box-shadow:0 20px 60px rgba(0,0,0,0.5),var(--glow-cyan)}
 .project-card.featured{grid-column:span 2;border-color:rgba(0,217,255,0.15);background:linear-gradient(135deg,rgba(0,217,255,0.03),rgba(139,92,246,0.03))}
-.project-card.featured::before{content:'FEATURED';position:absolute;top:20px;right:20px;font-family:var(--font-mono);font-size:.65rem;color:var(--cyan);letter-spacing:.15em;border:1px solid rgba(0,217,255,0.3);padding:4px 10px;border-radius:100px;background:rgba(0,217,255,0.06)}
+.project-card.featured::before{content:'FEATURED';position:absolute;top:20px;right:20px;font-family:var(--font-mono);font-size:.65rem;color:var(--cyan);letter-spacing:.15em;border:1px solid rgba(0,217,255,0.3);padding:4px 10px;border-radius:100px;background:rgba(0,217,255,0.06);pointer-events:none}
 .project-number{font-family:var(--font-mono);font-size:.75rem;color:var(--muted);margin-bottom:12px}
 .project-title{font-size:1.4rem;font-weight:700;margin-bottom:4px}
 .project-subtitle{font-size:.8rem;color:var(--cyan);font-family:var(--font-mono);margin-bottom:16px}
@@ -144,8 +147,8 @@ section{padding:120px 48px;position:relative}
 .feature-tag{font-size:.72rem;color:var(--muted);background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:4px;padding:3px 9px}
 .project-stack{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
 .stack-tag{font-family:var(--font-mono);font-size:.72rem;color:var(--purple);background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);border-radius:4px;padding:3px 9px}
-.project-links{display:flex;gap:12px}
-.project-link{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;color:var(--muted);text-decoration:none;transition:color .3s;padding:6px 14px;border:1px solid var(--border);border-radius:6px}
+.project-links{display:flex;gap:12px;position:relative;z-index:1}
+.project-link{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;color:var(--muted);text-decoration:none;transition:color .3s;padding:6px 14px;border:1px solid var(--border);border-radius:6px;position:relative;z-index:1}
 .project-link:hover{color:var(--cyan);border-color:rgba(0,217,255,0.3)}
 @media(max-width:1024px){#projects .projects-grid{grid-template-columns:1fr 1fr}.project-card.featured{grid-column:span 2}}
 @media(max-width:640px){#projects .projects-grid{grid-template-columns:1fr}.project-card.featured{grid-column:span 1}}
@@ -172,7 +175,7 @@ section{padding:120px 48px;position:relative}
 .cert-issuer{font-family:var(--font-mono);font-size:.75rem;color:var(--cyan)}
 
 /* ── CONTACT / TERMINAL ── */
-#contact .terminal{background:var(--bg2);border:1px solid rgba(0,217,255,0.15);border-radius:16px;overflow:hidden;margin-top:64px;max-width:700px}
+#contact .terminal{background:var(--bg2);border:1px solid rgba(0,217,255,0.15);border-radius:16px;overflow:hidden;margin-top:0;max-width:700px}
 .terminal-bar{background:rgba(255,255,255,0.04);padding:12px 20px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,0.05)}
 .t-dot{width:10px;height:10px;border-radius:50%}
 .t-dot:nth-child(1){background:#ff5f57}
@@ -198,11 +201,7 @@ section{padding:120px 48px;position:relative}
 .form-field textarea{min-height:120px}
 .btn-send{background:linear-gradient(135deg,var(--cyan),var(--purple));color:var(--bg);border:none;border-radius:8px;padding:14px 28px;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .3s}
 .btn-send:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,217,255,0.3)}
-#formStatus{
-  margin-top:12px;
-  font-size:.9rem;
-  font-family:var(--font-mono);
-}
+#formStatus{margin-top:12px;font-size:.9rem;font-family:var(--font-mono)}
 @media(max-width:768px){.contact-grid{grid-template-columns:1fr}}
 
 /* ── FOOTER ── */
@@ -241,7 +240,7 @@ footer p{color:var(--muted);font-size:.8rem;font-family:var(--font-mono)}
 
 /* ── GLOW BORDERS ── */
 .glow-border{position:relative}
-.glow-border::before{content:'';position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:linear-gradient(135deg,rgba(0,217,255,0.3),rgba(139,92,246,0.3));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .4s}
+.glow-border::before{content:'';position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:linear-gradient(135deg,rgba(0,217,255,0.3),rgba(139,92,246,0.3));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .4s;pointer-events:none}
 .glow-border:hover::before{opacity:1}
 
 /* ── MISC ── */
@@ -283,7 +282,9 @@ footer p{color:var(--muted);font-size:.8rem;font-family:var(--font-mono)}
     <li><a href="#projects">Projects</a></li>
     <li><a href="#timeline">Timeline</a></li>
     <li><a href="#contact">Contact</a></li>
-  </uL>
+  </ul>
+  <a href="#contact" class="nav-cta">Get in touch</a>
+  <button class="menu-btn" onclick="toggleMobileMenu()">☰</button>
 </nav>
 
 <!-- HERO -->
@@ -300,12 +301,10 @@ footer p{color:var(--muted);font-size:.8rem;font-family:var(--font-mono)}
     <p class="hero-sub">Building practical web applications that solve real-world problems.</p>
     <div class="hero-buttons">
       <a href="#projects" class="btn btn-primary"><span>↓</span><span>View Projects</span></a>
+      <a href="#contact" class="btn btn-primary"><span>✉</span><span>Get in Touch</span></a>
       <a href="https://github.com/Muhammedsalah677" class="btn btn-outline" target="_blank"><span>⌥</span><span>GitHub</span></a>
       <a href="https://www.linkedin.com/in/muhammed-salah-bb8651266/" class="btn btn-outline" target="_blank"><span>in</span><span>LinkedIn</span></a>
-      <a href="#contact" class="btn btn-primary"><span>↓</span><span>get in touch</span></a>
     </div>
-    
-  </div>
   </div>
 </section>
 
@@ -407,6 +406,9 @@ footer p{color:var(--muted);font-size:.8rem;font-family:var(--font-mono)}
           <span class="stack-tag">HTML</span>
           <span class="stack-tag">CSS</span>
         </div>
+        <div class="project-links">
+          <a href="https://github.com/Muhammedsalah677" target="_blank" class="project-link">⌥ GitHub</a>
+        </div>
       </div>
 
       <!-- Exam Guide -->
@@ -428,6 +430,9 @@ footer p{color:var(--muted);font-size:.8rem;font-family:var(--font-mono)}
           <span class="stack-tag">HTML</span>
           <span class="stack-tag">CSS</span>
         </div>
+        <div class="project-links">
+          <a href="https://github.com/Muhammedsalah677" target="_blank" class="project-link">⌥ GitHub</a>
+        </div>
       </div>
 
       <!-- To-Do List -->
@@ -447,57 +452,33 @@ footer p{color:var(--muted);font-size:.8rem;font-family:var(--font-mono)}
         <div class="project-links">
           <a href="https://github.com/Muhammedsalah677" target="_blank" class="project-link">⌥ GitHub</a>
         </div>
-</a>
       </div>
+
       <!-- Avengers: Doomsday Fan Guide -->
-<div class="project-card glow-border reveal">
-  <div class="project-number">04</div>
+      <div class="project-card glow-border reveal">
+        <div class="project-number">04</div>
+        <div class="project-title">Avengers: Doomsday Fan Guide</div>
+        <div class="project-subtitle">Interactive Marvel Movie Experience</div>
+        <div class="project-desc">Immersive fan website featuring interactive navigation, MCU timeline, movie watchlist, ticket booking section, and dynamic scroll-based animations with a cinematic hero section.</div>
+        <div class="project-features">
+          <span class="feature-tag">Fixed Navigation</span>
+          <span class="feature-tag">Scroll Effects</span>
+          <span class="feature-tag">Intersection Observer</span>
+          <span class="feature-tag">Active Link Tracking</span>
+          <span class="feature-tag">Movie Timeline</span>
+          <span class="feature-tag">Responsive Design</span>
+        </div>
+        <div class="project-stack">
+          <span class="stack-tag">HTML</span>
+          <span class="stack-tag">CSS</span>
+          <span class="stack-tag">JavaScript</span>
+        </div>
+        <div class="project-links">
+          <a href="https://github.com/Muhammedsalah677" target="_blank" class="project-link">⌥ GitHub</a>
+          <a href="https://avengers-doomsday-s4hd.onrender.com" target="_blank" class="project-link">↗ Live Demo</a>
+        </div>
+      </div>
 
-  <div class="project-title">
-    Avengers: Doomsday Fan Guide
-  </div>
-
-  <div class="project-subtitle">
-    Interactive Marvel Movie Experience
-  </div>
-
-  <div class="project-desc">
-    Developed an immersive Avengers: Doomsday fan website featuring an
-    interactive navigation system, MCU timeline, movie watchlist,
-    ticket booking section, and dynamic scroll-based animations.
-    Designed with a cinematic hero section using the official movie
-    poster and responsive user interactions.
-  </div>
-
-  <div class="project-features">
-    <span class="feature-tag">Fixed Navigation</span>
-    <span class="feature-tag">Scroll Effects</span>
-    <span class="feature-tag">Intersection Observer</span>
-    <span class="feature-tag">Active Link Tracking</span>
-    <span class="feature-tag">Movie Timeline</span>
-    <span class="feature-tag">Responsive Design</span>
-  </div>
-
-  <div class="project-stack">
-    <span class="stack-tag">HTML</span>
-    <span class="stack-tag">CSS</span>
-    <span class="stack-tag">JavaScript</span>
-  </div>
-
-  <div class="project-links">
-    <a href="https://github.com/Muhammedsalah677"
-       target="_blank"
-       class="project-link">
-       ⌥ GitHub
-    </a>
-
-    <a href="https://avengers-doomsday-s4hd.onrender.com"
-       target="_blank"
-       class="project-link">
-       ↗ Live Demo
-    </a>
-  </div>
-</div>
     </div>
   </div>
 </section>
@@ -568,8 +549,8 @@ footer p{color:var(--muted);font-size:.8rem;font-family:var(--font-mono)}
     <div class="section-label">Contact</div>
     <h2 class="section-title reveal">Let's <span class="dim">Connect</span></h2>
     <div class="contact-grid">
-      <div>
-        <div class="terminal reveal">
+      <div class="reveal">
+        <div class="terminal">
           <div class="terminal-bar">
             <div class="t-dot"></div><div class="t-dot"></div><div class="t-dot"></div>
             <span class="terminal-title">contact.sh</span>
@@ -597,59 +578,30 @@ footer p{color:var(--muted);font-size:.8rem;font-family:var(--font-mono)}
               <span class="t-key">linkedin</span>
               <a href="https://www.linkedin.com/in/muhammed-salah-bb8651266/" target="_blank" class="t-val">linkedin.com/in/muhammed-salah</a>
             </div>
-           
+            <div class="terminal-cursor"></div>
           </div>
         </div>
       </div>
-      <div class="contact-form reveal-right">
+      <div class="reveal-right">
         <p id="formStatus"></p>
-       <form
-  action="https://api.web3forms.com/submit"
-  method="POST"
-    id="contactForm"
-  class="contact-form"
->
-
-  <input
-    type="hidden"
-    name="access_key"
-    value="your acces key"
-  >
-
-  <div class="form-field">
-    <label>NAME</label>
-    <input
-      type="text"
-      name="name"
-      required
-      placeholder="Your name"
-    >
-  </div>
-
-  <div class="form-field">
-    <label>EMAIL</label>
-    <input
-      type="email"
-      name="email"
-      required
-      placeholder="your@email.com"
-    >
-  </div>
-
-  <div class="form-field">
-    <label>MESSAGE</label>
-    <textarea
-      name="message"
-      required
-      placeholder="Let's build something together..."
-    ></textarea>
-  </div>
-<div class="h-captcha" data-captcha="true"></div>
-  <button type="submit" class="btn-send">
-    Send Message →
-  </button>
-
-</form>
+        <form id="contactForm" action="https://api.web3forms.com/submit" method="POST" class="contact-form">
+          <input type="hidden" name="access_key" value="your access key">
+          <div class="form-field">
+            <label>NAME</label>
+            <input type="text" name="name" required placeholder="Your name">
+          </div>
+          <div class="form-field">
+            <label>EMAIL</label>
+            <input type="email" name="email" required placeholder="your@email.com">
+          </div>
+          <div class="form-field">
+            <label>MESSAGE</label>
+            <textarea name="message" required placeholder="Let's build something together..."></textarea>
+          </div>
+          <div class="h-captcha" data-captcha="true"></div>
+          <button type="submit" class="btn-send">Send Message →</button>
+        </form>
+      </div>
     </div>
   </div>
 </section>
@@ -695,7 +647,12 @@ setTimeout(()=>{
   const loader = document.getElementById('loader');
   loader.style.transition='opacity .6s';
   loader.style.opacity='0';
-  setTimeout(()=>{ loader.style.display='none'; }, 600);
+  // FIX: use visibility:hidden instead of display:none so it truly
+  // leaves the stacking context and can never block clicks underneath
+  setTimeout(()=>{
+    loader.style.display='none';
+    loader.style.pointerEvents='none';
+  }, 600);
 }, 3200);
 
 // ── CURSOR ──
@@ -757,7 +714,6 @@ function drawParticles(){
     ctx.fillStyle=`rgba(${p.color},${p.a})`;
     ctx.fill();
   });
-  // connect nearby
   for(let i=0;i<particles.length;i++){
     for(let j=i+1;j<particles.length;j++){
       const dx=particles[i].x-particles[j].x;
@@ -780,15 +736,15 @@ resize(); initParticles(); drawParticles();
 // ── TYPING EFFECT ──
 const roles=['Full Stack Developer','IT Undergraduate','Backend Developer','Problem Solver'];
 let ri=0,ci=0,deleting=false;
-const el=document.getElementById('typingText');
+const typingEl=document.getElementById('typingText');
 function type(){
   const cur=roles[ri];
   if(!deleting){
-    el.innerHTML=`<span style="color:var(--cyan)">&gt; </span><span style="color:var(--white)">${cur.slice(0,ci)}</span><span class="cursor-blink"></span>`;
+    typingEl.innerHTML=`<span style="color:var(--cyan)">&gt; </span><span style="color:var(--white)">${cur.slice(0,ci)}</span><span class="cursor-blink"></span>`;
     ci++;
     if(ci>cur.length){ deleting=true; setTimeout(type,1800); return; }
   } else {
-    el.innerHTML=`<span style="color:var(--cyan)">&gt; </span><span style="color:var(--white)">${cur.slice(0,ci)}</span><span class="cursor-blink"></span>`;
+    typingEl.innerHTML=`<span style="color:var(--cyan)">&gt; </span><span style="color:var(--white)">${cur.slice(0,ci)}</span><span class="cursor-blink"></span>`;
     ci--;
     if(ci<0){ deleting=false; ri=(ri+1)%roles.length; ci=0; setTimeout(type,300); return; }
   }
@@ -806,12 +762,9 @@ window.addEventListener('scroll',()=>{
   progress.style.width=(sp/dh*100)+'%';
   navbar.className=sp>60?'scrolled':'';
   btt.className=sp>400?'visible':'';
-  // reveal animations
   document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.tl-item').forEach(el=>{
     const rect=el.getBoundingClientRect();
-    if(rect.top<window.innerHeight*.88){
-      el.classList.add('visible');
-    }
+    if(rect.top<window.innerHeight*.88) el.classList.add('visible');
   });
 });
 
@@ -852,57 +805,32 @@ function copyText(text,btn){
   });
 }
 
-// ── FORM ──
-const form = document.getElementById("contactForm");
-const status = document.getElementById("formStatus");
-form.addEventListener("submit", async (e) => {
+// ── CONTACT FORM ──
+const form = document.getElementById('contactForm');
+const formStatus = document.getElementById('formStatus');
+form.addEventListener('submit', async (e) => {
   e.preventDefault();
-
-  const submitBtn = form.querySelector(".btn-send");
-
+  const submitBtn = form.querySelector('.btn-send');
   submitBtn.disabled = true;
-  submitBtn.textContent = "Sending...";
-
+  submitBtn.textContent = 'Sending...';
   const formData = new FormData(form);
-
   try {
-    const response = await fetch(
-      "https://api.web3forms.com/submit",
-      {
-        method: "POST",
-        body: formData
-      }
-    );
-
+    const response = await fetch('https://api.web3forms.com/submit', { method:'POST', body:formData });
     const result = await response.json();
-
-    if (result.success) {
-
-      status.textContent =
-        "Message sent successfully ✓";
-
-      status.style.color = "#28c840";
-
+    if(result.success){
+      formStatus.textContent = 'Message sent successfully ✓';
+      formStatus.style.color = '#28c840';
       form.reset();
-
     } else {
-
-      status.textContent =
-        "Failed to send message";
-
-      status.style.color = "#ff5f57";
+      formStatus.textContent = 'Failed to send message. Try again.';
+      formStatus.style.color = '#ff5f57';
     }
-
-  } catch (error) {
-
-    status.textContent =
-      "Something went wrong";
-
-    status.style.color = "#ff5f57";
+  } catch(err) {
+    formStatus.textContent = 'Something went wrong.';
+    formStatus.style.color = '#ff5f57';
   }
-
   submitBtn.disabled = false;
-  submitBtn.textContent = "Send Message →";
+  submitBtn.textContent = 'Send Message →';
 });
 
 // ── COMMAND PALETTE ──
@@ -916,7 +844,7 @@ const commands=[
   {icon:'⌛',label:'Timeline',action:()=>{ document.querySelector('#timeline').scrollIntoView({behavior:'smooth'}); }},
   {icon:'✉',label:'Contact',action:()=>{ document.querySelector('#contact').scrollIntoView({behavior:'smooth'}); }},
   {icon:'⌥',label:'GitHub',action:()=>{ window.open('https://github.com/Muhammedsalah677','_blank'); }},
-  {icon:'in',label:'LinkedIn',action:()=>{ window.open('https://linkedin.com/in/muhammed-salah','_blank'); }},
+  {icon:'in',label:'LinkedIn',action:()=>{ window.open('https://www.linkedin.com/in/muhammed-salah-bb8651266/','_blank'); }},
   {icon:'@',label:'Send Email',action:()=>{ window.location.href='mailto:muhammedsalah677@gmail.com'; }},
 ];
 let activeIdx=0;
@@ -956,17 +884,13 @@ function toggleMobileMenu(){
   } else { links.style.display='none'; }
 }
 
-// Initial reveal check
+// ── INITIAL REVEAL ──
 setTimeout(()=>{
   document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el=>{
     const rect=el.getBoundingClientRect();
     if(rect.top<window.innerHeight) el.classList.add('visible');
   });
 },100);
-document.querySelectorAll('.project-link').forEach(link=>{
-  link.style.zIndex='99999';
-  link.style.position='relative';
-});
 </script>
 </body>
 </html>
